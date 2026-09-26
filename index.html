@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6-сынып. Қазақ тілі мен әдебиеті</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        gold: {
+                            400: '#FACC15',
+                            500: '#D4AF37',
+                            600: '#AA8C2C',
+                        },
+                        kzblue: {
+                            900: '#0B1E36',
+                            800: '#153255',
+                            700: '#1F4B82',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, rgba(31, 75, 130, 0.05) 0%, rgba(212, 175, 55, 0.05) 100%), #f8f9fa;
+            background-attachment: fixed;
+            position: relative;
+        }
+        
+        /* Gradient Border */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 6px solid transparent;
+            background: linear-gradient(135deg, #1F4B82, #D4AF37) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .tab-content.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphism & Mountain Effects */
+        .mountain-bg {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%231F4B82" fill-opacity="0.1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,213.3C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path><path fill="%23153255" fill-opacity="0.15" d="M0,160L60,170.7C120,181,240,203,360,202.7C480,203,600,181,720,154.7C840,128,960,96,1080,101.3C1200,107,1320,149,1380,170.7L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>') bottom/100% no-repeat;
+        }
+        
+        .glass-panel {
+            background: rgba(31, 75, 130, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(11, 30, 54, 0.15);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 16px 0 rgba(31, 75, 130, 0.05);
+        }
+
+        /* TV Show Jeopardy Game Styles */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            background: rgba(11, 30, 54, 0.85);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 4px solid #D4AF37;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 10px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .game-card {
+            background: linear-gradient(180deg, #1F4B82 0%, #0B1E36 100%);
+            color: #FACC15;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.25rem;
+            font-weight: bold;
+            font-family: 'Playfair Display', serif;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            border: 2px solid #AA8C2C;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4), inset 0 2px 5px rgba(255,255,255,0.2);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.4);
+            color: #fff;
+            background: linear-gradient(180deg, #153255 0%, #1F4B82 100%);
+        }
+        
+        .game-card.played {
+            background: rgba(226, 232, 240, 0.1);
+            color: transparent;
+            border-color: rgba(203, 213, 225, 0.3);
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            text-shadow: none;
+        }
+
+        /* 3D Cube Styles */
+        .scene {
+            width: 320px;
+            height: 320px;
+            perspective: 1200px;
+            margin: 5rem auto;
+        }
+        
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(-160px);
+            animation: spinCube 20s infinite linear;
+        }
+        
+        .cube:hover {
+            animation-play-state: paused;
+        }
+        
+        .cube-face {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border: 4px solid #1F4B82;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Playfair Display', serif;
+            
+            /* Мөлдір шыны эффектісі (Прозрачный) */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            
+            color: #1F4B82;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 25px rgba(31, 75, 130, 0.2);
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .cube-face:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: #153255;
+            border-color: #D4AF37;
+            box-shadow: inset 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+        
+        .cube-face-front  { transform: rotateY(  0deg) translateZ(160px); }
+        .cube-face-right  { transform: rotateY( 90deg) translateZ(160px); }
+        .cube-face-back   { transform: rotateY(180deg) translateZ(160px); }
+        .cube-face-left   { transform: rotateY(-90deg) translateZ(160px); }
+        .cube-face-top    { transform: rotateX( 90deg) translateZ(160px); }
+        .cube-face-bottom { transform: rotateX(-90deg) translateZ(160px); }
+        
+        @keyframes spinCube {
+            0% { transform: translateZ(-160px) rotateX(0deg) rotateY(0deg); }
+            100% { transform: translateZ(-160px) rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <header class="bg-kzblue-900 text-white shadow-lg sticky top-0 z-40 border-b-2 border-gold-500">
+        <div class="max-w-6xl mx-auto px-4 py-4 md:py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <p class="text-sm md:text-base text-gold-400 font-semibold tracking-wider uppercase mb-1">6-сынып. Қазақ тілі мен әдебиеті</p>
+                    <h1 class="text-2xl md:text-3xl font-serif font-bold tracking-wide text-white">Қазақстандағы қандай тауларды білесің?</h1>
+                </div>
+            </div>
+            
+            <nav class="mt-6 flex overflow-x-auto pb-2 custom-scrollbar gap-2 justify-start md:justify-center">
+                <button onclick="playClick(); switchTab('home')" class="tab-btn active whitespace-nowrap px-5 py-2 rounded-full font-medium text-sm transition-colors bg-gold-500 text-kzblue-900 hover:bg-gold-600 shadow-md">
+                    <i class="fas fa-mountain mr-1"></i> Танымдық мәтін
+                </button>
+                <button onclick="playClick(); switchTab('game')" class="tab-btn whitespace-nowrap px-5 py-2 rounded-full font-medium text-sm transition-colors bg-kzblue-800 text-white hover:bg-kzblue-700 border border-kzblue-700">
+                    <i class="fas fa-tv mr-1"></i> Зияткерлік дода
+                </button>
+                <button onclick="playClick(); switchTab('cube')" class="tab-btn whitespace-nowrap px-5 py-2 rounded-full font-medium text-sm transition-colors bg-kzblue-800 text-white hover:bg-kzblue-700 border border-kzblue-700">
+                    <i class="fas fa-cube mr-1"></i> Сан есім
+                </button>
+                <button onclick="playClick(); switchTab('test')" class="tab-btn whitespace-nowrap px-5 py-2 rounded-full font-medium text-sm transition-colors bg-kzblue-800 text-white hover:bg-kzblue-700 border border-kzblue-700">
+                    <i class="fas fa-tasks mr-1"></i> Білім сынағы
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-6xl mx-auto w-full px-4 py-8">
+        
+        <section id="home" class="tab-content active">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <div class="relative min-h-[300px] lg:min-h-full">
+                        <img src="https://bilimdiler.kz/oyin_sayk/uploads/posts/2022-02/1643902120_tau1.jpg" alt="Қазақстан таулары" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent to-black/30 lg:to-transparent lg:bg-gradient-to-b"></div>
+                    </div>
+                    <div class="p-6 md:p-8 bg-gradient-to-br from-white to-gray-50 border-l border-gray-200">
+                        <h2 class="text-3xl font-serif font-bold text-kzblue-900 mb-6 pb-2 border-b-2 border-gold-500 inline-block">Еліміздің асқар таулары</h2>
+                        <div class="space-y-4 text-gray-700 leading-relaxed text-justify font-medium">
+                            <p>Қазақстанда <span class="font-bold text-kzblue-800">Сарыарқа, Мұғалжар, Маңғыстау, Алтай, Жоңғар Алатауы, Тянь-Шань</span> таулары бар.</p>
+                            
+                            <p><i class="fas fa-map-marker-alt text-gold-600 mr-2"></i><span class="font-bold text-kzblue-800">Сарыарқа</span> таулары Орталық Қазақстанда орналасқан. Олар - ұсақ шоқылы аласа таулар. Орташа биіктігі - 500-600м. Сарыарқаның ең биік нүктесі - Ақсораң. Ақсораңның биіктігі - 1565м.</p>
+                            
+                            <p><i class="fas fa-map-marker-alt text-gold-600 mr-2"></i><span class="font-bold text-kzblue-800">Мұғалжар</span> - аса биік емес, тастақ таулар тізбегі. Ең биік нүктесі - Боқтыбай тауы. Биіктігі - 657м.</p>
+                            
+                            <p><i class="fas fa-map-marker-alt text-gold-600 mr-2"></i><span class="font-bold text-kzblue-800">Маңғыстау</span> тауларына Қаратаудың батыс, шығыс жоталары, Ақтаудың оңтүстік, солтүстік жоталары кіреді. Маңғыстау тауларының ең биік нүктесі - Қаратау Бесшоқы. Оның биіктігі - 556м.</p>
+                            
+                            <p><i class="fas fa-map-marker-alt text-gold-600 mr-2"></i>Қазақстанға алып <span class="font-bold text-kzblue-800">Алтай</span> тауларының бір бөлігі енеді. Алтай таулары Зайсаң көлі мен Байкал көлдерінің аралығында жатыр. Алтайдың ең биік шыңы - Мұзтау (Белуха). Оның биіктігі - 4506м.</p>
+                            
+                            <p><i class="fas fa-map-marker-alt text-gold-600 mr-2"></i>Оңтүстік-шығыста <span class="font-bold text-kzblue-800">Тянь-Шань</span> таулары орналасқан. Орталық, Батыс, Солтүстік Тянь-Шань таулары Қазақстан жерінде жатыр. Ал Орталық Тянь-Шань Қытай, Қазақстан, Қырғызстан шекараларында орналасқан. Қазақстанның ең биік нүктесі - Хантәңірі. Оның биіктігі - 6995м.</p>
+                            
+                            <p><i class="fas fa-map-marker-alt text-gold-600 mr-2"></i><span class="font-bold text-kzblue-800">Жоңғар Алатауы</span> Қазақстанның шығысында Қытай мен Қазақстанның шекарасында орналасқан. Жоңғар Алатауы Тянь-Шань тауларына жатады. Ол Алакөл мен Іле өзенінің аралығында. Орташа биіктігі - 3580м.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="game" class="tab-content">
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+                <div class="text-center mb-8 border-b pb-6 border-gray-200">
+                    <h2 class="text-3xl font-serif font-bold text-kzblue-900"><i class="fas fa-tv text-gold-500 mr-3"></i>Зияткерлік дода</h2>
+                    <p class="text-gray-500 mt-2 font-medium">Мәтіндегі мәліметтер негізінде жасырылған сұрақтарды ашып, біліміңізді тексеріңіз.</p>
+                </div>
+                
+                <div class="game-grid" id="game-grid">
+                    <!-- Уяшықтар JS арқылы генерацияланады -->
+                </div>
+            </div>
+        </section>
+
+        <section id="cube" class="tab-content">
+            <div class="glass-panel mountain-bg rounded-2xl shadow-xl p-6 md:p-8 relative overflow-hidden min-h-[600px] flex flex-col justify-center">
+                <div class="absolute -top-20 -right-20 text-gold-500 opacity-10 pointer-events-none"><i class="fas fa-shapes text-[15rem]"></i></div>
+                
+                <div class="text-center mb-2 relative z-10">
+                    <h2 class="text-3xl font-serif font-bold text-kzblue-900"><i class="fas fa-shapes text-gold-600 mr-3"></i>Сан есім</h2>
+                    <p class="text-kzblue-900 mt-3 max-w-2xl mx-auto font-medium bg-white/40 p-3 rounded-lg backdrop-blur-sm border border-white/50">Сан есімнің түрлерімен танысу үшін айналып тұрған кубтың қырларын басыңыз.</p>
+                </div>
+
+                <div class="scene">
+                    <div class="cube" id="grammar-cube">
+                        <div class="cube-face cube-face-front" onclick="openCubeModal('есептік')">
+                            <i class="fas fa-calculator mb-2 text-3xl"></i>Есептік
+                        </div>
+                        <div class="cube-face cube-face-back" onclick="openCubeModal('бөлшектік')">
+                            <i class="fas fa-chart-pie mb-2 text-3xl"></i>Бөлшектік
+                        </div>
+                        <div class="cube-face cube-face-right" onclick="openCubeModal('болжалдық')">
+                            <i class="fas fa-cloud mb-2 text-3xl"></i>Болжалдық
+                        </div>
+                        <div class="cube-face cube-face-left" onclick="openCubeModal('топтау')">
+                            <i class="fas fa-layer-group mb-2 text-3xl"></i>Топтау
+                        </div>
+                        <div class="cube-face cube-face-top" onclick="openCubeModal('жинақтық')">
+                            <i class="fas fa-users mb-2 text-3xl"></i>Жинақтық
+                        </div>
+                        <div class="cube-face cube-face-bottom" onclick="openCubeModal('реттік')">
+                            <i class="fas fa-list-ol mb-2 text-3xl"></i>Реттік
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-4 rounded-xl mt-8 text-center max-w-3xl mx-auto shadow-sm relative z-10">
+                    <h3 class="font-bold text-kzblue-900 mb-2">Сан есім туралы жалпы ереже</h3>
+                    <p class="text-sm text-kzblue-900 font-medium">Сан есім — заттың санын, мөлшерін білдіретін сөз табы. «Неше?», «қанша?» сұрақтарына жауап береді. Сан есім өзі анықтайтын сөздің алдында тұрады (мысалы: екі тау). Заттанғанда көптеледі, жіктеледі, тәуелденеді, септеледі. Сан есіммен тіркескен зат есімге көптік жалғау жалғанбайды.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="test" class="tab-content">
+            <div class="glass-panel rounded-2xl shadow-xl p-6 md:p-8 relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-kzblue-700/5 to-kzblue-900/10 rounded-2xl pointer-events-none"></div>
+                <div class="relative z-10 mb-6 flex flex-col md:flex-row justify-between items-start md:items-end border-b border-kzblue-900/20 pb-4 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-serif font-bold text-kzblue-900"><i class="fas fa-tasks text-gold-600 mr-3"></i>Білім сынағы</h2>
+                        <p class="text-kzblue-900 mt-2 font-medium bg-white/30 px-4 py-2 rounded-lg inline-block backdrop-blur-sm border border-white/40">«Сан есім» тақырыбы бойынша 10 сұрақ. Мұқият болыңыз, жауаптар ұқсас.</p>
+                    </div>
+                    <div class="text-sm font-bold bg-kzblue-900 px-5 py-2.5 rounded-lg text-gold-400 border border-gold-500 shadow-lg whitespace-nowrap" id="test-score">Нәтиже: 0 / 10</div>
+                </div>
+
+                <form id="quiz-form" class="space-y-6 relative z-10">
+                    <div id="quiz-container" class="space-y-4"></div>
+                    
+                    <div class="pt-6 border-t border-kzblue-900/20 mt-8">
+                        <button type="button" onclick="checkQuiz()" class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-kzblue-900 font-bold py-3 px-8 rounded-xl shadow-lg transition-transform transform hover:-translate-y-1 w-full md:w-auto text-lg border border-gold-300">
+                            <i class="fas fa-check-double mr-2"></i> Жауаптарды тексеру
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Jeopardy Question Modal -->
+    <div id="game-modal" class="fixed inset-0 bg-kzblue-900/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md transition-opacity">
+        <div class="bg-gradient-to-b from-kzblue-800 to-kzblue-900 rounded-2xl shadow-[0_0_30px_rgba(212,175,55,0.4)] max-w-xl w-full overflow-hidden transform transition-all border-4 border-gold-500">
+            <div class="p-5 text-center relative border-b border-gold-500/30">
+                <button onclick="closeGameModal()" class="absolute top-4 right-4 text-gray-300 hover:text-white transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                <div class="text-gold-400 font-bold text-xl uppercase tracking-widest"><span id="game-modal-points"></span> ҰПАЙ</div>
+            </div>
+            <div class="p-8 text-center text-white">
+                <p id="game-modal-question" class="text-2xl md:text-3xl font-serif font-medium leading-relaxed drop-shadow-md"></p>
+                
+                <div id="game-modal-answer-box" class="mt-8 pt-6 border-t border-kzblue-700 hidden animate-[fadeIn_0.5s_ease-in-out]">
+                    <p class="text-gold-400 text-sm font-bold mb-2 uppercase">Жауабы:</p>
+                    <p id="game-modal-answer" class="text-xl md:text-2xl font-bold text-white"></p>
+                </div>
+            </div>
+            <div class="bg-kzblue-950 p-4 text-center border-t border-kzblue-800">
+                <button id="btn-show-answer" onclick="showGameAnswer()" class="bg-gold-500 hover:bg-gold-600 text-kzblue-900 font-bold py-2.5 px-8 rounded-xl transition-colors shadow-lg">
+                    <i class="fas fa-eye mr-2"></i> Жауапты көру
+                </button>
+                <button onclick="closeGameModal()" class="text-gray-400 hover:text-white font-medium ml-4 underline underline-offset-4">Жабу</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cube Info Modal -->
+    <div id="cube-modal" class="fixed inset-0 bg-kzblue-900/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md transition-opacity">
+        <div class="bg-white rounded-2xl shadow-[0_0_30px_rgba(212,175,55,0.3)] max-w-lg w-full overflow-hidden transform transition-all border-4 border-gold-500">
+            <div class="bg-gradient-to-r from-kzblue-900 to-kzblue-800 p-5 text-center relative">
+                <button onclick="closeCubeModal()" class="absolute top-4 right-4 text-gray-300 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                <h3 id="cube-modal-title" class="text-2xl font-serif font-bold text-gold-500">Тақырып</h3>
+            </div>
+            <div class="p-6 text-gray-700">
+                <div id="cube-modal-content" class="space-y-4 font-medium leading-relaxed">
+                    <!-- Content injected via JS -->
+                </div>
+            </div>
+            <div class="bg-gray-50 p-4 text-center border-t border-gray-200">
+                <button onclick="closeCubeModal()" class="text-kzblue-700 font-bold hover:underline">Түсіндім, жабу</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="fixed inset-0 bg-kzblue-900/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-white rounded-2xl shadow-[0_0_30px_rgba(212,175,55,0.3)] max-w-sm w-full overflow-hidden text-center p-6 border-t-8 border-gold-500">
+            <i class="fas fa-trophy text-5xl text-gold-500 mb-4"></i>
+            <h3 id="result-title" class="text-2xl font-bold text-kzblue-900 mb-2">Нәтиже</h3>
+            <p id="result-message" class="text-gray-600 mb-6">Хабарлама</p>
+            <button onclick="closeResultModal()" class="bg-kzblue-900 hover:bg-kzblue-800 text-white font-bold py-2 px-8 rounded-lg transition-colors w-full">
+                Жалғастыру
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let synth;
+        let successSynth;
+        
+        async function initAudio() {
+            if (!synth) {
+                await Tone.start();
+                synth = new Tone.Synth({
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.5 }
+                }).toDestination();
+                synth.volume.value = -10;
+                
+                successSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+                successSynth.volume.value = -12;
+            }
+        }
+
+        function playClick() {
+            initAudio();
+            if(synth) synth.triggerAttackRelease("C5", "32n");
+        }
+
+        function playPop() {
+            initAudio();
+            if(synth) synth.triggerAttackRelease("G4", "16n");
+        }
+
+        function playSuccess() {
+            initAudio();
+            if(successSynth) {
+                const now = Tone.now();
+                successSynth.triggerAttackRelease(["C4", "E4", "G4"], "8n", now);
+                successSynth.triggerAttackRelease(["E4", "G4", "C5"], "2n", now + 0.2);
+            }
+        }
+
+        // Дерекқор: Зияткерлік дода (12 сұрақ - телешоу форматында 4 баған, 3 қатар)
+        const gameData = [
+            // 1 қатар: 10 ұпай
+            { points: 10, q: "Сарыарқаның ең биік нүктесі және оның биіктігі?", a: "Ақсораң тауы (1565 м)" },
+            { points: 10, q: "Мұғалжар тауларының ең биік шыңы қандай?", a: "Боқтыбай тауы (657 м)" },
+            { points: 10, q: "Маңғыстау тауларының ең биік нүктесі?", a: "Қаратау Бесшоқы (556 м)" },
+            { points: 10, q: "Сарыарқаның орташа биіктігі қанша?", a: "500-600 метр" },
+            // 2 қатар: 20 ұпай
+            { points: 20, q: "Алтай таулары қай көлдердің аралығында орналасқан?", a: "Зайсаң мен Байкал көлдерінің аралығында" },
+            { points: 20, q: "Жоңғар Алатауы қай өзен мен көлдің аралығында?", a: "Алакөл мен Іле өзенінің аралығында" },
+            { points: 20, q: "Қаратау мен Ақтау жоталары қай тау жүйесін құрайды?", a: "Маңғыстау тауларын" },
+            { points: 20, q: "Жоңғар Алатауының орташа биіктігі қандай?", a: "3580 метр" },
+            // 3 қатар: 30 ұпай
+            { points: 30, q: "Тянь-Шань тауларының ең биік нүктесі?", a: "Хантәңірі (6995 м)" },
+            { points: 30, q: "Орталық Тянь-Шань қай елдердің шекарасында орналасқан?", a: "Қытай, Қазақстан, Қырғызстан шекараларында" },
+            { points: 30, q: "Ұсақ шоқылы аласа таулар Қазақстанның қай бөлігінде және қалай аталады?", a: "Орталық Қазақстанда, Сарыарқа таулары" },
+            { points: 30, q: "Мұзтау (Белуха) қай тау жүйесіне кіреді және биіктігі қанша?", a: "Алтай тауларына кіреді, биіктігі 4506 м" }
+        ];
+
+        // Дерекқор: Футуристік куб (Сан есім ережелері)
+        const cubeData = {
+            'есептік': {
+                title: 'Есептік сан есім',
+                content: '<p class="text-kzblue-900 font-bold mb-2">Сұрақтары: <span class="text-gold-600 font-normal">қанша? неше?</span></p><p>Заттың нақты санын, мөлшерін білдіреді.</p><div class="bg-gray-100 p-3 rounded mt-3 border-l-4 border-gold-500"><p class="text-sm italic">Мысалы: бір, он, жүз жиырма бес, мың.</p></div>'
+            },
+            'бөлшектік': {
+                title: 'Бөлшектік сан есім',
+                content: '<p class="text-kzblue-900 font-bold mb-2">Сұрақтары: <span class="text-gold-600 font-normal">қанша? неше? қаншасы?</span></p><p>Заттың бөлшектенген санын білдіреді.</p><div class="bg-gray-100 p-3 rounded mt-3 border-l-4 border-gold-500"><p class="text-sm italic">Мысалы: оннан бір, он бүтін үштен екі, жарты, ширек.</p></div>'
+            },
+            'болжалдық': {
+                title: 'Болжалдық сан есім',
+                content: '<p class="text-kzblue-900 font-bold mb-2">Сұрақтары: <span class="text-gold-600 font-normal">қанша? неше?</span></p><p>Заттың санын дәл көрсетпей, шамамен, тұспалдап білдіреді.</p><div class="bg-gray-100 p-3 rounded mt-3 border-l-4 border-gold-500"><p class="text-sm italic">Мысалы: ондаған, ондарда, он шақты, жүздей, мыңға жуық.</p></div>'
+            },
+            'топтау': {
+                title: 'Топтау сан есім',
+                content: '<p class="text-kzblue-900 font-bold mb-2">Сұрақтары: <span class="text-gold-600 font-normal">нешеден? қаншадан?</span></p><p>Заттың санын топтап көрсетеді. Көбіне дефис арқылы жазылады.</p><div class="bg-gray-100 p-3 rounded mt-3 border-l-4 border-gold-500"><p class="text-sm italic">Мысалы: он-оннан, бір-бірден, екі-екіден.</p></div>'
+            },
+            'жинақтық': {
+                title: 'Жинақтық сан есім',
+                content: '<p class="text-kzblue-900 font-bold mb-2">Сұрақтары: <span class="text-gold-600 font-normal">нешеу?</span></p><p>Заттың санын жинақтап, топтап көрсетеді. Тек 1-ден 7-ге дейінгі сандардан ғана жасалады.</p><div class="bg-gray-100 p-3 rounded mt-3 border-l-4 border-gold-500"><p class="text-sm italic">Мысалы: біреу, екеу, үшеу, төртеу, бесеу, алтау, жетеу.</p></div>'
+            },
+            'реттік': {
+                title: 'Реттік сан есім',
+                content: '<p class="text-kzblue-900 font-bold mb-2">Сұрақтары: <span class="text-gold-600 font-normal">нешінші?</span></p><p>Заттың саналану ретін білдіреді. Жұрнақтары: -ыншы/-інші, -ншы/-нші.</p><ul class="list-disc pl-5 mt-2 text-sm space-y-1"><li>Араб цифрымен жазылса, дефис қойылады (6-сынып).</li><li>Рим цифрымен жазылса, дефис қойылмайды (VI сынып).</li><li>Жыл, ай аттарының алдынан келсе, дефис қойылмайды (1 қыркүйек).</li></ul>'
+            }
+        };
+
+        // Дерекқор: Тест тапсырмалары (10 сұрақ - қиындық деңгейі жоғарырақ)
+        const quizData = [
+            {
+                q: "Сан есім заттанғанда қандай грамматикалық өзгерістерге ұшырайды?",
+                options: [
+                    "Көптеледі, жіктеледі, тәуелденеді, септеледі",
+                    "Тек тәуелденеді, септеледі, мүлде жіктелмейді",
+                    "Жіктеледі, көптеледі, бірақ мүлдем септелмейді",
+                    "Көптеледі, септеледі, бірақ мүлде тәуелденбейді"
+                ],
+                correct: 0
+            },
+            {
+                q: "Сан есіммен тіркесіп тұрған зат есімдер қалай жазылуы тиіс?",
+                options: [
+                    "Тек қана көптік жалғауымен бірге жазылады",
+                    "Қалауы бойынша көптік жалғауын қосуға болады",
+                    "Зат есімдерге көптік жалғауы мүлдем жалғанбайды",
+                    "Сан есімнен кейін зат есім көптеліп қана жазылады"
+                ],
+                correct: 2
+            },
+            {
+                q: "«Он-оннан, бір-бірден» сөздері сан есімнің қай түріне жатады?",
+                options: [
+                    "Реттік сан есімнің қатарына",
+                    "Топтау сан есімнің қатарына",
+                    "Болжалдық сан есімнің қатарына",
+                    "Бөлшектік сан есімнің қатарына"
+                ],
+                correct: 1
+            },
+            {
+                q: "Реттік сан есімдерді жасайтын қосымшаларды (жұрнақтарды) табыңыз.",
+                options: [
+                    "-ау, -еу, -дан, -ден, -тан, -тен",
+                    "-даған, -деген, -таған, -теген",
+                    "-лар, -лер, -дар, -дер, -тар, -тер",
+                    "-ыншы, -інші, -ншы, -нші"
+                ],
+                correct: 3
+            },
+            {
+                q: "Сан есім араб цифрымен жазылған жағдайда, реттік жұрнақ қалай беріледі?",
+                options: [
+                    "Цифрдан кейін үтір қойылып жазылады",
+                    "Цифрдан кейін дефис (-) қойылады",
+                    "Цифрдан кейін бос орын қалдырылады",
+                    "Цифрға сөз тікелей қосылып жазылады"
+                ],
+                correct: 1
+            },
+            {
+                q: "Рим цифрымен берілген реттік сан есімдердің жазылу ережесі қандай?",
+                options: [
+                    "Рим цифрынан соң жұрнақ орнына дефис қойылмайды",
+                    "Рим цифрынан соң міндетті түрде дефис қойылады",
+                    "Рим цифрынан кейін нүкте немесе үтір қойылады",
+                    "Рим цифрымен жазылғанда жұрнақ толық жазылады"
+                ],
+                correct: 0
+            },
+            {
+                q: "Жыл, ай аттарының алдынан келген араб цифрымен берілген сан есім қалай жазылады?",
+                options: [
+                    "Цифрдан кейін міндетті түрде дефис қойылып жазылады",
+                    "Цифрдан кейін реттік жұрнағы толықтай жазылады",
+                    "Цифрдан кейін ешқандай дефис белгісі қойылмайды",
+                    "Цифрдан кейін нүкте қойылып барып жалғасады"
+                ],
+                correct: 2
+            },
+            {
+                q: "«Біреу, жетеу, екеу» сөздері сан есімнің қай мағыналық тобына жатады?",
+                options: [
+                    "Санның нақты мөлшерін білдіретін есептік",
+                    "Заттың жинақталған санын білдіретін жинақтық",
+                    "Заттың бөлшектенген мөлшерін көрсететін бөлшектік",
+                    "Шамамен немесе болжаммен айтылатын болжалдық"
+                ],
+                correct: 1
+            },
+            {
+                q: "«Ондаған, он шақты, жүздерде» сөздерінің грамматикалық тобын анықтаңыз.",
+                options: [
+                    "Заттың ретін көрсететін реттік сан есім",
+                    "Нақты санды көрсететін есептік сан есім",
+                    "Шамамен алынған болжалдық сан есім",
+                    "Жинақталған санды көрсететін жинақтық сан есім"
+                ],
+                correct: 2
+            },
+            {
+                q: "Сан есім сөйлем ішінде өзі анықтайтын сөздің қай жерінде орналасады?",
+                options: [
+                    "Анықтайтын сөзінен кейін ғана тұрады",
+                    "Өзі анықтайтын сөзінің алдында тұрады",
+                    "Анықтайтын сөзімен қатарласа түрленеді",
+                    "Сөйлемнің ең соңында, баяндауыштан кейін"
+                ],
+                correct: 1
+            }
+        ];
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.addEventListener('click', initAudio, { once: true });
+            renderGame();
+            renderQuiz();
+        });
+
+        // Вкладка ауыстыру
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'bg-gold-500', 'text-kzblue-900', 'shadow-md');
+                el.classList.add('bg-kzblue-800', 'text-white');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            
+            const activeBtn = document.querySelector(`button[onclick*="switchTab('${tabId}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-kzblue-800', 'text-white');
+                activeBtn.classList.add('active', 'bg-gold-500', 'text-kzblue-900', 'shadow-md');
+            }
+        }
+
+        // Зияткерлік дода логикасы
+        function renderGame() {
+            const container = document.getElementById('game-grid');
+            let html = '';
+            
+            // Сұрақтар телешоу форматында (10, 20, 30 ұпай) ретімен шығуы үшін араластырмаймыз
+            gameData.forEach((item, index) => {
+                html += `
+                <div class="game-card" id="game-card-${index}" onclick="openGameModal(${index}, '${item.q.replace(/'/g, "\\'")}', '${item.a.replace(/'/g, "\\'")}', ${item.points})">
+                    ${item.points}
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        let currentGameCardId = null;
+
+        function openGameModal(index, question, answer, points) {
+            playPop();
+            currentGameCardId = `game-card-${index}`;
+            document.getElementById('game-modal-points').textContent = points;
+            document.getElementById('game-modal-question').textContent = question;
+            document.getElementById('game-modal-answer').textContent = answer;
+            
+            // Жасыру жауапты
+            document.getElementById('game-modal-answer-box').classList.add('hidden');
+            document.getElementById('btn-show-answer').classList.remove('hidden');
+            
+            document.getElementById('game-modal').classList.remove('hidden');
+        }
+
+        function showGameAnswer() {
+            playSuccess();
+            document.getElementById('game-modal-answer-box').classList.remove('hidden');
+            document.getElementById('btn-show-answer').classList.add('hidden');
+            
+            // Уяшықты өшіру
+            if(currentGameCardId) {
+                document.getElementById(currentGameCardId).classList.add('played');
+                document.getElementById(currentGameCardId).innerHTML = '<i class="fas fa-check"></i>';
+            }
+        }
+
+        function closeGameModal() {
+            playClick();
+            document.getElementById('game-modal').classList.add('hidden');
+        }
+
+        // Куб модаль логикасы
+        function openCubeModal(type) {
+            playPop();
+            const data = cubeData[type];
+            if(data) {
+                document.getElementById('cube-modal-title').textContent = data.title;
+                document.getElementById('cube-modal-content').innerHTML = data.content;
+                document.getElementById('cube-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeCubeModal() {
+            playClick();
+            document.getElementById('cube-modal').classList.add('hidden');
+        }
+
+        // Тест логикасы
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            let html = '';
+            
+            // Сұрақтарды араластырмаймыз, бірақ варианттардың ұзындығы біркелкі
+            quizData.forEach((item, index) => {
+                html += `
+                <div class="glass-card p-5 rounded-xl transition duration-300 relative overflow-hidden group" id="question-box-${index}">
+                    <div class="absolute inset-0 bg-white/20 group-hover:bg-white/40 transition-colors pointer-events-none"></div>
+                    <p class="font-bold text-kzblue-900 mb-4 leading-relaxed relative z-10 text-lg"><span class="text-gold-600 mr-2 bg-white/60 px-2.5 py-1 rounded shadow-sm">${index + 1}</span> ${item.q}</p>
+                    <div class="space-y-3 pl-2 md:pl-6 relative z-10">
+                `;
+                item.options.forEach((opt, optIndex) => {
+                    html += `
+                        <label class="flex items-start gap-3 cursor-pointer p-3 rounded-lg hover:bg-white/50 border border-transparent hover:border-white/70 transition-all backdrop-blur-sm bg-white/30">
+                            <input type="radio" name="q${index}" value="${optIndex}" class="mt-1 w-4 h-4 text-kzblue-700 focus:ring-kzblue-700 border-white bg-white/70">
+                            <span class="text-kzblue-900 font-medium">${opt}</span>
+                        </label>
+                    `;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function checkQuiz() {
+            playClick();
+            let score = 0;
+            let answered = 0;
+
+            quizData.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                const box = document.getElementById(`question-box-${index}`);
+                
+                box.classList.remove('border-green-500', 'bg-green-50', 'border-red-500', 'bg-red-50');
+
+                if (selected) {
+                    answered++;
+                    if (parseInt(selected.value) === item.correct) {
+                        score++;
+                        box.classList.add('border-green-500', 'bg-green-50');
+                    } else {
+                        box.classList.add('border-red-500', 'bg-red-50');
+                    }
+                }
+            });
+
+            if (answered < quizData.length) {
+                showResultModal('Назар аударыңыз!', `Сіз тек ${answered} сұраққа жауап бердіңіз. Барлық 10 сұрақты белгілеңіз.`);
+                return;
+            }
+
+            document.getElementById('test-score').textContent = `Нәтиже: ${score} / 10`;
+            
+            let message = "";
+            if (score >= 9) {
+                message = "Керемет нәтиже! Сіз тақырыпты толық меңгергенсіз.";
+                playSuccess();
+            }
+            else if (score >= 7) {
+                message = "Жақсы нәтиже. Аздаған қателіктер бар, ережені қайта шолып шығыңыз.";
+                playSuccess();
+            }
+            else message = "Сізге сан есім ережелерін (Футуристік куб) мұқият қайта оқуға кеңес береміз.";
+
+            showResultModal(`Қорытынды: ${score} ұпай`, message);
+        }
+
+        function showResultModal(title, message) {
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('result-message').textContent = message;
+            document.getElementById('result-modal').classList.remove('hidden');
+        }
+
+        function closeResultModal() {
+            playClick();
+            document.getElementById('result-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
